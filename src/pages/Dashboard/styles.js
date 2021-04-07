@@ -12,4 +12,9 @@ export const Container = styled.div`
 export const SearchContainer = styled.div`
   display: flex;
   flex-direction: row;
+
+  button {
+    background-color: ${Colors.blackTransparent};
+    width: 50px;
+  }
 `;

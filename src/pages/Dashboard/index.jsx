@@ -5,7 +5,7 @@ import { Post } from "../../components/organisms";
 import { Form } from "@unform/web";
 import { FiSearch } from "react-icons/fi";
 import { usePost } from "../../hooks/Post";
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import * as Yup from "yup";
 import api from "../../services/api";
 import { errorValidation, formatError } from "../../utils/errorValidation";
@@ -25,8 +25,9 @@ const Toast = Swal.mixin({
 });
 
 const Dashboard = () => {
-  const { posts, getPosts } = usePost();
+  const { posts, getPosts, getFilter, postMood } = usePost();
   const formRef = useRef();
+  const searchRef = useRef();
 
 
   useEffect(() => {
@@ -34,7 +35,7 @@ const Dashboard = () => {
   }, []);
 
   const handleSearch = async (data) => {
-    //PESQUISA MOOD
+    getFilter(data);
   }
 
    
@@ -48,11 +49,7 @@ const Dashboard = () => {
 
       await schema.validate(data, { abortEarly: false });
 
-      const response = await api.post("/posts", {
-        text: data.post,
-      });
-
-      getPosts();
+      postMood(data);
     } catch (err) {
       if (err instanceof Yup.ValidationError) {
         const errors = errorValidation(err);
@@ -75,18 +72,23 @@ const Dashboard = () => {
       <Header exitButtonVisible profileVisible />
       <ScrollView>
         <Timeline>
-          <DynamicContent visible={posts && posts.length > 0}>
-            <Form 
-              initialData={{ name: "" }}>
+          {/* <DynamicContent visible={posts && posts.length > 0}> */}
+            <Form
+              formRef={searchRef}
+              onSubmit={handleSearch}
+              >
               <SearchContainer>
-                <Input onChange={handleSearch} name="search" placeholder={"Qual mood você deseja buscar?"} leftIcon={FiSearch}/>
+                <Input name="search" placeholder={"Qual mood você deseja buscar?"} />
+                <Button buttonType="transparent" type="submit">
+                  <FiSearch/>
+                </Button>
               </SearchContainer>
             </Form>
-          </DynamicContent>
+          {/* </DynamicContent> */}
           <PostBox formRef={formRef} handleSend={handlePost}/>
           
           {posts && posts.map((post) => {
-            return <Post text={post.text} file={post.file} date={post.date} user={post.user}/>
+            return <Post key={post.secure_id} text={post.text} file={post.file} date={post.date} user={post.user}/>
           })}
         </Timeline>
       </ScrollView>

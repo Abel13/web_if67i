@@ -7,8 +7,6 @@ import { Container, HeaderText, PostHeader, BodyContent, BodyText } from './styl
 const Post = ({ text, date, user: postUser, file }) => {
   const { user } = useAuth();
 
-  console.log(user.secure_id , postUser)
-
   return (
     <Container>
       <PostHeader>

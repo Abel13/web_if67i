@@ -36,7 +36,6 @@ export const AuthProvider = ({ children }) => {
       password,
     });
     const { token, user } = response.data;
-    console.log(response.data.token);
 
     localStorage.setItem('@if67i:token', token);
     localStorage.setItem('@if67i:user', JSON.stringify(user));
