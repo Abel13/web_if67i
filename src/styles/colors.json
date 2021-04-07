@@ -1,0 +1,24 @@
+{
+  "primary": "#38BF76FF",
+  "secondary": "#494468FF",
+
+  "white": "#ffffff",
+  "black": "#000000",
+  "gray": "#999591",
+  "grayHard": "#666360",
+
+  "light": "#e4edf8",
+  "dark": "#28262e",
+
+  "success": "#269E26",
+  "danger": "#c53030",
+  "warning": "#C59A2F",
+  "info": "#235C7E",
+
+  "whiteTransparent": "#e4edf855",
+  "blackTransparent": "#00000055",
+  "transparent": "transparent",
+
+  "inputs": "#232129",
+  "background": "#312E38"
+}
