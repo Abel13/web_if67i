@@ -29,6 +29,7 @@ export const PostProvider= ({ children }) => {
     const { posts } = data;
     const response = await api.post("/posts", {
       text: mood.post,
+      file: mood.file,
     });
 
     const newPost = response.data;

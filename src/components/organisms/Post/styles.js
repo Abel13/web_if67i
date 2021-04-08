@@ -34,3 +34,17 @@ export const BodyContent = styled.div`
 export const BodyText = styled.span`
   font-size: 15px;
 `;
+
+export const ImageContainer = styled.div`
+  margin: 10px;
+  display: flex;
+  justify-content: center;
+`;
+
+export const Image = styled.img`
+  border: 2px solid ${Colors.whiteTransparent};
+  border-radius: 5px;
+  padding: 10px;
+  max-width: 300px;
+  max-height: 300px;
+`;

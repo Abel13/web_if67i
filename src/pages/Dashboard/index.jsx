@@ -25,6 +25,7 @@ const Toast = Swal.mixin({
 });
 
 const Dashboard = () => {
+  const [file, setFile] = useState("");
   const { posts, getPosts, getFilter, postMood } = usePost();
   const formRef = useRef();
   const searchRef = useRef();
@@ -38,18 +39,33 @@ const Dashboard = () => {
     getFilter(data);
   }
 
+  const handleGetImage = async (e) => {
+    const formData = new FormData();
+  
+    formData.append('file', e.target.files[0]);
+
+    const response = await api.post('files', formData);
+
+    const {url} = response.data;
+
+    setFile(url);
+  }
+
    
   const handlePost = async (data) => {
     try {
-      formRef.current?.setErrors([]);
-      const schema = Yup.object().shape({
-        post: Yup.string()
-          .required("Mood não pode estar vazio!")
-      });
+      if (!file) {
+        formRef.current?.setErrors([]);
+        const schema = Yup.object().shape({
+          post: Yup.string()
+            .required("Mood não pode estar vazio!")
+        });
 
-      await schema.validate(data, { abortEarly: false });
+        await schema.validate(data, { abortEarly: false });
+      }
 
-      postMood(data);
+      postMood({ ...data, file });
+      setFile("");
     } catch (err) {
       if (err instanceof Yup.ValidationError) {
         const errors = errorValidation(err);
@@ -85,7 +101,7 @@ const Dashboard = () => {
               </SearchContainer>
             </Form>
           {/* </DynamicContent> */}
-          <PostBox formRef={formRef} handleSend={handlePost}/>
+          <PostBox file={file} formRef={formRef} handleSend={handlePost} handleGetImage={ handleGetImage }/>
           
           {posts && posts.map((post) => {
             return <Post key={post.secure_id} text={post.text} file={post.file} date={post.date} user={post.user}/>
