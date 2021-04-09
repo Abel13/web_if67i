@@ -1,7 +1,9 @@
 import axios from "axios";
 
+console.log("ENV", process.env.REACT_APP_API);
+
 const api = axios.create({
-  baseURL: process.env.REACT_APP_API || "http://localhost:3333",
+  baseURL: process.env.REACT_APP_API || "https://if67i-backend.herokuapp.com",
 });
 
 axios.interceptors.request.use(
