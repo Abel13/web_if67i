@@ -9,38 +9,43 @@ export const AuthProvider = ({ children }) => {
     const user = localStorage.getItem('@if67i:user');
 
     if (token && user) {
-      return { token, user: JSON.parse(user), loading: false };
+      api.defaults.headers.common = { Authorization: `bearer ${token}` };
+      return { user: JSON.parse(user), loading: false };
     }
-
-    return {};
+    
+    delete api.defaults.headers.common.Authorization;
+    return {user: null};
   });
 
   const signOut = useCallback(async () => {
     localStorage.removeItem('@if67i:token');
     localStorage.removeItem('@if67i:user');
 
-    setData({});
-  }, []);
-
-  const updateUser = useCallback(async (userData) => {
-    setData({ ...data, loading: true });
-    localStorage.setItem('@if67i:user', JSON.stringify(userData));
-
-    setData({ ...data, user: userData, loading: false });
+    delete api.defaults.headers.common.Authorization;
+    setData({user: null});
   }, []);
 
   const signIn = useCallback(async ({ email, password }) => {
-    setData({ token: '', user: {}, loading: true });
+    setData({ user: null, loading: true });
     const response = await api.post('sessions', {
       email,
       password,
     });
     const { token, user } = response.data;
 
-    localStorage.setItem('@if67i:token', token);
-    localStorage.setItem('@if67i:user', JSON.stringify(user));
+    if (token && user) {
+      
+      localStorage.setItem('@if67i:token', token);
+      localStorage.setItem('@if67i:user', JSON.stringify(user));
+      
+      api.defaults.headers.common = { Authorization: `bearer ${token}` };
+      setData({ user, loading: false });
+    }
+    else {
 
-    setData({ token: token, user, loading: false });
+      delete api.defaults.headers.common.Authorization;
+      setData({user: null});
+    }
   }, []);
 
   return (
@@ -51,7 +56,6 @@ export const AuthProvider = ({ children }) => {
         token: data.token,
         signIn,
         signOut,
-        updateUser,
       }}
     >
       {children}

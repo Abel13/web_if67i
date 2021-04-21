@@ -1,18 +1,19 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Route as ReactDOMRoute, Redirect } from "react-router-dom";
 import { useAuth } from "../../hooks/Auth";
-import api from "../../services/api";
 
 const Route = ({ isPrivate = false, component: Component, ...rest }) => {
-  const { user, token } = useAuth();
+  const { user } = useAuth();
 
-  api.defaults.headers.common = { Authorization: `bearer ${token}` };
+  useEffect(() => {
+    console.log("USER", user);
+  }, [user]);
 
   return (
     <ReactDOMRoute
       {...rest}
       render={({ location }) => {
-        return isPrivate === (!!user && !!token) ? (
+        return isPrivate === !!user ? (
           <Component />
         ) : (
           <Redirect
